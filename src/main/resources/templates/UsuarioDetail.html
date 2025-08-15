@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <div class="container">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-4 ">
+                <a class="navbar-brand text-white" th:href="@{/usuario}">INDEX</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a th:href="@{/usuario/add}" class="nav-item nav-link active text-white" href="#">Registro</a>
+                    </div>
+                </div>
+            </nav>
+
+            <table class="table table-hover">
+
+
+
+                <thead class="table-dark">
+                <th class="col-1"></th>
+                <th class="col-2">Nombre</th>
+                <th class="col-4">Direccion</th>
+               
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="text-center d-flex flex-column align-items-center">
+                                <div class="card p-3 w-100 h-100">
+                                    <label for="imagenFile" class="form-label fw-bold">Imagen</label>
+                                    <input type="file" class="form-control mb-2" name="imagenFile" id="imagenFile">
+                                    <img id="previewImage" style="max-width: 300px; max-height: auto" class="mx-auto" src="https://static.vecteezy.com/system/resources/previews/018/765/757/non_2x/user-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg"/>
+                                </div>
+                            </div>
+                        </td>
+
+                       
+
+                        <!-- Nombre -->
+                        <td>
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${datosUsuario.object.Nombre}" placeholder="Nombre">
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${datosUsuario.object.ApellidoPaterno}" placeholder="Apellido Paterno">
+                            <input type="text" class="form-control" 
+                                   th:value="${datosUsuario.object.ApellidoMaterno}" placeholder="Apellido Materno">
+                            
+                          
+                        <!-- Contacto -->
+                    
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${datosUsuario.object.Telefono}" placeholder="Teléfono">
+                            <input type="text" class="form-control" 
+                                   th:value="${datosUsuario.object.Celular}" placeholder="Celular">
+                            
+                            <div class= "container ">
+                            <a class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+                            </div>
+                            
+                        </td>
+
+                        <!-- Dirección -->
+                        <td th:each="direccion : ${datosUsuario.object.Direcciones}">
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${direccion.Calle}" placeholder="Calle">
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${direccion.NumeroInterior}" placeholder="Número Interior">
+                            <input type="text" class="form-control mb-1" 
+                                   th:value="${direccion.NumeroExterior}" placeholder="Número Exterior">
+                            <input type="text" class="form-control" 
+                                   th:value="${direccion.colonia.NombreColonia}" placeholder="Colonia">
+                            
+                            <div class= "container ">
+                            <a class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-danger"><i class="bi bi-trash3-fill"></i></a>
+                            </div>
+                            
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </body>
+</html>

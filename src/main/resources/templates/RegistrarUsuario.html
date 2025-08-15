@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    </head>
+    <body>
+       <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-4 ">
+                <a class="navbar-brand text-white" th:href="@{/usuario}">INDEX</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a th:href="@{/usuario/add}" class="nav-item nav-link active text-white" href="#">Registro</a>
+                    </div>
+                </div>
+            </nav>
+
+<form class="">
+  <div class="mb-3">
+    <label class="form-label">Nombre</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+ <div class="mb-3">
+    <label class="form-label">Apellido Paterno</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+  <div class="mb-3">
+    <label class="form-label">Apellido Materno</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+    <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Hombre</label>
+  </div>
+     <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label class="form-check-label" for="exampleCheck1">Mujer</label>
+  </div>
+    
+     <div class="mb-3 form-check">
+    <input type="date">
+    <label>FechaNacimiento</label>
+  </div>
+    
+     <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+      <div class="mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+      <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+     <div class="mb-3">
+    <label class="form-label">Telefono</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+    <div class="mb-3">
+    <label class="form-label">Celular</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+    <div class="mb-3">
+    <label class="form-label">curp</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">  
+  </div>
+    
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+    </body>
+</html>
