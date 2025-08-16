@@ -34,6 +34,7 @@
                     </div>
                 </div>
             </nav>
+            
 
             <form method="post" th:object="${Usuario}" th:action="@{/usuario/add}">
                 
@@ -51,8 +52,8 @@
                         <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label  class="form-label fw-bold error-msg">Nombre</label>
-                                <input type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}" <!-- onkeypress="SoloLetras(event, this) " --> >
-                                      
+                                <input  type="text" class="form-control" placeholder="Nombre" th:value="${Usuario.Nombre}" th:field="*{Nombre}" <!-- onkeypress="SoloLetras(event, this) " --> >
+                                   
                                        <span class="text-danger"
                                          th:if="${#fields.hasErrors('Nombre')}"
                                         onautocomplete=""th:errors="*{Nombre}">

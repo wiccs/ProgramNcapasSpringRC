@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -139,6 +140,25 @@ public class UsuarioController {
         return result;
     }
     
+ //-----------------------------------------------------------------------------
     
+      @GetMapping("getformEditable")
+    public String formEditable(@RequestParam int idUsuario,
+            @RequestParam(required = false) Integer idDireccion, 
+            Model model){
+        
+         if (idDireccion == null) { 
+         
+            Result result = usuarioDAOImplementation.GetDetail(idUsuario);
+        
+            model.addAttribute("Usuario",result.object);
+        
+       }
+        
+           return "UsuarioForm";
+
+        
+
+    }
     
 }

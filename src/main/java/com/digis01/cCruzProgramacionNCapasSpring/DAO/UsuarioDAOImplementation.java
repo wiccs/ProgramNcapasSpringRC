@@ -291,15 +291,42 @@ private JdbcTemplate jdbcTemplate;
     }
 
     @Override
-    public Result Update(int idUsuario) {
+    public Result Update(Usuario usuario) {
         Result result = new Result();
+        
         try {
-            jdbcTemplate.execute("{CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
-            callableStatement.setInt(1, idUsuario);
-            callableStatement.setString(2, );
-            })
+            Boolean execute = jdbcTemplate.execute("{CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+                callableStatement.setInt(1, usuario.getIdUsuario());
+                callableStatement.setString((2),usuario.getNombre());
+                callableStatement.setString((3),usuario.getApellidoPaterno());
+                callableStatement.setString((4),usuario.getApellidoMaterno());
+                callableStatement.setInt((5),usuario.getEdad());
+                
+                char sexo = usuario.getSexo().charAt(0);
+                callableStatement.setString((6),String.valueOf(sexo));
+                
+                callableStatement.setDate(7, new java.sql.Date(usuario.getFechaNacimiento().getTime()));
+                
+                callableStatement.setString((8),usuario.getUsername());
+                callableStatement.setString((9),usuario.getEmail());
+                callableStatement.setString((10),usuario.getPassword());
+                callableStatement.setString((11),usuario.getTelefono());
+                callableStatement.setString((12),usuario.getCelular());
+                callableStatement.setString((13),usuario.getCurp());
+                
+                callableStatement.setString((14),usuario.Rol.getNombre());
+                
+                callableStatement.execute();
+                return null;
+                
+               
+                
+            });
         } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
         }
+        return result;
     }
 
 }
