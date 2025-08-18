@@ -50,6 +50,8 @@ public class UsuarioController {
     @Autowired
     private ColoniaDAOImplementation coloniaDAOImplementation;
     
+    
+    
     @GetMapping
     public String Index(Model model){
         Result result = usuarioDAOImplementation.GetAll();
@@ -82,6 +84,7 @@ public class UsuarioController {
         return "UsuarioDetail";
     }
     
+    
         @GetMapping("add") 
     public String add(Model model){
         
@@ -93,6 +96,31 @@ public class UsuarioController {
         model.addAttribute("Usuario", new Usuario());
         
         return "UsuarioForm";
+    }
+    
+    
+     @GetMapping("getformEditable")
+    public String formEditable(@RequestParam int idUsuario,
+            @RequestParam(required = false) Integer idDireccion, 
+            Model model){
+        
+         if (idDireccion == null) { 
+         
+            Result resultrol = rolDAOImplementation.GetAll();
+            Result result = usuarioDAOImplementation.GetDetail(idUsuario); //Este result contendra un idUsuario, y quiza un idDireccion
+        
+            int DireccionId = -1;
+            model.addAttribute("Roles",resultrol.object); //Los ids se mandan a la vista del formulario para cargarlos. 
+            model.addAttribute("Usuario",result.object); //Los ids se mandan a la vista del formulario para cargarlos. 
+            model.addAttribute("idUsuario",DireccionId);
+            
+            
+       }
+        
+           return "UsuarioForm";
+
+        
+
     }
     
     
@@ -111,6 +139,7 @@ public class UsuarioController {
 
     }
     
+    
       //getMunicipioByEstado?IdEstado=7 -- requestParam
     //getMunicipioByestado/7 -- pathVariable
     @GetMapping("getEstadoByPais/{IdPais}")
@@ -122,6 +151,8 @@ public class UsuarioController {
         return result;
     }
     
+    
+    
     @GetMapping("getMunicipioByEstado/{IdEstado}")
     @ResponseBody // retorne un dato estructurado - JSON
     public Result MunicipioByEstado(@PathVariable("IdEstado") int IdEstado){
@@ -130,6 +161,7 @@ public class UsuarioController {
    
         return result;
     }
+    
     
     @GetMapping("getColoniaByMunicipio/{IdMunicipio}")
     @ResponseBody // retorne un dato estructurado - JSON
@@ -142,23 +174,6 @@ public class UsuarioController {
     
  //-----------------------------------------------------------------------------
     
-      @GetMapping("getformEditable")
-    public String formEditable(@RequestParam int idUsuario,
-            @RequestParam(required = false) Integer idDireccion, 
-            Model model){
-        
-         if (idDireccion == null) { 
-         
-            Result result = usuarioDAOImplementation.GetDetail(idUsuario);
-        
-            model.addAttribute("Usuario",result.object);
-        
-       }
-        
-           return "UsuarioForm";
-
-        
-
-    }
+     
     
 }

@@ -179,27 +179,42 @@ private JdbcTemplate jdbcTemplate;
                         
                         if(resultSet.getString("ApellidoMaterno") == null){
                         usuario.setApellidoMaterno(" ");}
+                        else{
+                        usuario.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                        }
                         
+                        usuario.setEdad(resultSet.getInt("Edad"));
+                        
+                        
+                        usuario.setSexo(resultSet.getString("Sexo"));
+                        
+                        usuario.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
+                      
                         usuario.setUsername(resultSet.getString("Username"));
                         usuario.setEmail(resultSet.getString("Email"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
                         
-                        if(resultSet.getString("Celular") == null){
-                        usuario.setCelular(" ");}
+                        if(resultSet.getString("celular") == null){
+                        usuario.setCelular(" ");
+                        }else{
+                        usuario.setCelular(resultSet.getString("Celular"));
+                        }
                         
                       
                         
                         usuario.Rol = new Rol();
                         usuario.Rol.setIdRol(resultSet.getInt("IdRol"));
                         usuario.Rol.setNombre(resultSet.getString("Rol"));
+                        
+                        usuario.setCurp(resultSet.getString("curp"));
 
                     int idDireccion;
-                    if ((idDireccion = resultSet.getInt("IdDireccion")) != 0) {
+                    if ((idDireccion = resultSet.getInt("IdDireccion")) != 0) {//Si usuario tiene una direccion
 
-                        usuario.Direcciones = new ArrayList<>();
+                        usuario.Direcciones = new ArrayList<>(); //Se crea una lista de direcciones pues puede tener mas de una
                                                                                 
                         do {
-                            Direccion direccion = new Direccion();
+                            Direccion direccion = new Direccion(); //Inicializamos la direccion de memoria en usuario que referencia a la entidad direccion
                             
                         direccion.setIdDireccion(resultSet.getInt("IdDireccion"));
                         direccion.setCalle(resultSet.getString("Calle"));

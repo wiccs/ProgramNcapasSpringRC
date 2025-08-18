@@ -53,20 +53,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <!-- Nombre -->
                         <td>
+<!--                            <input type="hidden" class="form-control mb-1"
+                                   th:value="${datosUsuario.object.idUsuario}"-->
+                                   
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${datosUsuario.object.Nombre}" placeholder="Nombre">
+                                   th:value="${datosUsuario.object.nombre}" placeholder="Nombre">
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${datosUsuario.object.ApellidoPaterno}" placeholder="Apellido Paterno">
+                                   th:value="${datosUsuario.object.apellidoPaterno}" placeholder="Apellido Paterno">
                             <input type="text" class="form-control" 
-                                   th:value="${datosUsuario.object.ApellidoMaterno}" placeholder="Apellido Materno">
-                            
-                          
-                        <!-- Contacto -->
-                    
+                                   th:value="${datosUsuario.object.apellidoMaterno}" placeholder="Apellido Materno">
+                           
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${datosUsuario.object.Telefono}" placeholder="Teléfono">
+                                   th:value="${datosUsuario.object.telefono}" placeholder="Teléfono">
                             <input type="text" class="form-control" 
-                                   th:value="${datosUsuario.object.Celular}" placeholder="Celular">
+                                   th:value="${datosUsuario.object.celular}" placeholder="Celular">
                             
                             <div class= "container ">
                             <a th:href="|@{/usuario/getformEditable?idUsuario=}${datosUsuario.object.IdUsuario}|" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
@@ -76,15 +76,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </td>
 
                         <!-- Dirección -->
-                        <td th:each="direccion : ${datosUsuario.object.Direcciones}">
+                        <td th:each="direccion : ${datosUsuario.object.direcciones}">
+                            
+<!--                            <input type="hidden" class="form-control mb-1"
+                                   th:value="${direccion.idDireccion}">-->
+                                   
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${direccion.Calle}" placeholder="Calle">
+                                   th:value="${direccion.calle}" placeholder="Calle">
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${direccion.NumeroInterior}" placeholder="Número Interior">
+                                   th:value="${direccion.numeroInterior}" placeholder="Número Interior">
                             <input type="text" class="form-control mb-1" 
-                                   th:value="${direccion.NumeroExterior}" placeholder="Número Exterior">
+                                   th:value="${direccion.numeroExterior}" placeholder="Número Exterior">
                             <input type="text" class="form-control" 
-                                   th:value="${direccion.colonia.NombreColonia}" placeholder="Colonia">
+                                   th:value="${direccion.colonia.nombreColonia}" placeholder="Colonia">
                             
                             <div class= "container ">
                             <a class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
