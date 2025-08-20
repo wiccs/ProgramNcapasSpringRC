@@ -41,23 +41,32 @@
                 <!-- Seccion de usuario -->
                 <div class="row" th:if = "*{IdUsuario != 0}">
 
-                    <!-- Seccion de foto -->
+<!--                     Seccion de foto 
                     <div class="col-md-4 text-center d-flex flex-column align-items-center">
                         <div class="card p-3 w-100 h-100">
                             <label for="imagenFile" class="form-label fw-bold">Imagen</label>
                             <input type="file" class="form-control mb-2" name="imagenFile" id="imagenFile">
                             <img id="previewImage" style="max-width: 300px; max-height: auto" class="mx-auto" src="https://static.vecteezy.com/system/resources/previews/018/765/757/non_2x/user-profile-icon-in-flat-style-member-avatar-illustration-on-isolated-background-human-permission-sign-business-concept-vector.jpg"/>
                         </div>
-                    </div>
+                    </div>-->
 
                     
                     <!-- Seccion de datos personales -->
                     <div class="col-md-8">
                         <div class="card p-3 h-100">
+                            
+                            <div class="mb-3">
+                                <label  class="form-label fw-bold error-msg">idUsuario</label>
+                                
+                                <input  type="text" class="form-control"  th:field="*{IdUsuario}" <!-- onkeypress="SoloLetras(event, this) " --> 
+         
+                                        
+                            </div>
+                            
                             <div class="mb-3">
                                 <label  class="form-label fw-bold error-msg">Nombre</label>
                                 
-                                <input  type="text" class="form-control" placeholder="Nombre"  th:field="*{Nombre}" <!-- onkeypress="SoloLetras(event, this) " --> >
+                                <input  type="text" class="form-control" placeholder="Nombre"  th:field="*{Nombre}" <!-- onkeypress="SoloLetras(event, this) " --> 
 
                                         <span class="text-danger"
                                         th:if="${#fields.hasErrors('Nombre')}"
@@ -70,7 +79,7 @@
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="ApellidoPaternoUsuario" class="form-label fw-bold error-msg">Apellido Paterno</label>
-                                    <input id="ApellidoPaternoUsuario" type="text" class="form-control" placeholder="Apellido Paterno" th:field ="*{ApellidoPaterno}"   <!-- onkeypress="SoloLetras(event, this) " --> >
+                                    <input id="ApellidoPaternoUsuario" type="text" class="form-control" placeholder="Apellido Paterno" th:field ="*{ApellidoPaterno}"   <!-- onkeypress="SoloLetras(event, this) " --> 
 
                                 </div>
 
@@ -96,7 +105,7 @@
                             <div class="row">
                                 <div class="col mb-3">
                                     <label for="Fecha Nacimiento" class="form-label fw-bold">FechaNacimiento</label>
-                                    <input id="Fecha Nacimiento" type="text" class="form-control" placeholder="Fecha Nacimiento" th:field="*{FechaNacimiento}">
+                                    <input id="Fecha Nacimiento" type="date" class="form-control" placeholder="Fecha Nacimiento" th:field="*{FechaNacimiento}">
 
                                 </div>
                             </div>
@@ -126,7 +135,7 @@
                                 </div>
                                 <div class="col mb-3">
                                     <label for="CelularUsuario" class="form-label fw-bold">Celular</label>
-                                    <input id="PasswordUsuario" type="password" class="form-control" placeholder="Celular" th:field="*{Celular}">
+                                    <input id="PasswordUsuario" type="text" class="form-control" placeholder="Celular" th:field="*{Celular}">
                                 </div>
                             </div>
 
@@ -141,7 +150,7 @@
                             <div class="row">
                                 <label for="RolUsuario" class="form-label fw-bold">Rol</label>
                                
-                                <select class="form-select" aria-label="Default select example"> 
+                                <select class="form-select" aria-label="Default select example" th:field="*{Rol.idRol}"> 
                                     <option th:value=0 selected> Selecciona un rol </option> 
                                     <option th:each="rol : ${Roles}" th:text="${rol.Nombre}" th:value="${rol.idRol}">One</option>
                                 </select>

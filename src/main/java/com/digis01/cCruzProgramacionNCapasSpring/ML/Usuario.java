@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -42,6 +43,7 @@ public class Usuario {
     private String Sexo;
     
 //    @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date FechaNacimiento;
     
 //    @NotBlank

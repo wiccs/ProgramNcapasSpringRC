@@ -318,7 +318,7 @@ private JdbcTemplate jdbcTemplate;
         Result result = new Result();
         
         try {
-            Boolean execute = jdbcTemplate.execute("{CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            result.correct   = jdbcTemplate.execute("{CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, usuario.getIdUsuario());
                 callableStatement.setString((2),usuario.getNombre());
                 callableStatement.setString((3),usuario.getApellidoPaterno());
@@ -337,19 +337,27 @@ private JdbcTemplate jdbcTemplate;
                 callableStatement.setString((12),usuario.getCelular());
                 callableStatement.setString((13),usuario.getCurp());
                
-                callableStatement.setString((14),usuario.Rol.getNombre());
+                callableStatement.setInt((14),usuario.Rol.getIdRol());
                 
-                callableStatement.setClob(15, new StringReader(usuario.getFotito()));
+                //callableStatement.setString(15, usuario.getFotito());
 
-                callableStatement.execute();
-                return null;
+                int isCorrect = callableStatement.executeUpdate();
                 
-               
+                System.out.println("executeUpdate: "+isCorrect);
                 
+                 if (isCorrect == -1) {
+
+                    return true;
+                }
+                 
+                return false;
+          
             });
+            
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
         }
         return result;
     }

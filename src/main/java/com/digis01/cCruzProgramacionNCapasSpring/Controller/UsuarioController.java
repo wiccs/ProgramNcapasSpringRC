@@ -107,6 +107,7 @@ public class UsuarioController {
             Model model){
         
         Result resultrol = rolDAOImplementation.GetAll();
+        
         model.addAttribute("Roles",resultrol.objects);
         
          if (idDireccion == null) { 
@@ -132,13 +133,15 @@ public class UsuarioController {
    
     @PostMapping("add") // localhost:8081/alumno/add
     public String Add(@Valid @ModelAttribute("Usuario") Usuario usuario,
-            BindingResult bindingResult, Model model,@RequestParam("imagenFile") MultipartFile imagen){
+            BindingResult bindingResult, Model model, @RequestParam("imagenFile") MultipartFile imagen){
         
 //        if (bindingResult.hasErrors()) {
 //            model.addAttribute("Usuario", usuario);
 //            return "AlumnoForm";//Si tiene errores de validacion recarga el formulario sin borrar los datos ingresados
 //        } else {
-             if (imagen != null) {
+
+
+             if (imagen != null && imagen.getOriginalFilename() != "") {
                 String nombre = imagen.getOriginalFilename();
                 //archivo.jpg
                 //[archivo,jpg]
@@ -154,7 +157,9 @@ public class UsuarioController {
 
                 }
             }
+
             Result result = usuarioDAOImplementation.UpdateUser(usuario);
+            
             return "redirect:/usuario";
         //}
 
