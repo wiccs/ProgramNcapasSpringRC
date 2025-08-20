@@ -25,6 +25,7 @@ import org.springframework.jdbc.core.CallableStatementCallback;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Direccion;
+import java.io.StringReader;
 import java.util.List;
 
 /**
@@ -93,19 +94,26 @@ private JdbcTemplate jdbcTemplate;
                         
                         if(resultSet.getString("ApellidoMaterno") == null){
                         usuario.setApellidoMaterno(" ");}
+                        else{
+                        usuario.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                        }
                         
                         usuario.setUsername(resultSet.getString("Username"));
                         usuario.setEmail(resultSet.getString("Email"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
                         
-                        if(resultSet.getString("Celular") == null){
-                        usuario.setCelular(" ");}
+                         if(resultSet.getString("celular") == null){
+                        usuario.setCelular(" ");
+                        }else{
+                        usuario.setCelular(resultSet.getString("Celular"));
+                        }
                         
-                      
+                        usuario.setFotito(resultSet.getString("Fotito"));
                         
                         usuario.Rol = new Rol();
                         usuario.Rol.setIdRol(resultSet.getInt("IdRol"));
                         usuario.Rol.setNombre(resultSet.getString("Rol"));
+                        
 
                         int idDireccion;
                         if ((idDireccion = resultSet.getInt("IdDireccion")) != 0) {
@@ -306,7 +314,7 @@ private JdbcTemplate jdbcTemplate;
     }
 
     @Override
-    public Result Update(Usuario usuario) {
+    public Result UpdateUser(Usuario usuario) {
         Result result = new Result();
         
         try {
@@ -328,9 +336,11 @@ private JdbcTemplate jdbcTemplate;
                 callableStatement.setString((11),usuario.getTelefono());
                 callableStatement.setString((12),usuario.getCelular());
                 callableStatement.setString((13),usuario.getCurp());
-                
+               
                 callableStatement.setString((14),usuario.Rol.getNombre());
                 
+                callableStatement.setClob(15, new StringReader(usuario.getFotito()));
+
                 callableStatement.execute();
                 return null;
                 

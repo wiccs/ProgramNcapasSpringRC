@@ -36,7 +36,7 @@
             </nav>
 
 
-            <form method="post" th:object="${Usuario}" th:action="@{/usuario/add}"> //Este formulario trabaja con el objeto pasado por el comtrolador @GetMapping("getformEditable")
+            <form method="post" th:object="${Usuario}" th:action="@{/usuario/add}" enctype="multipart/form-data"> //Este formulario trabaja con el objeto pasado por el comtrolador @GetMapping("getformEditable")
 
                 <!-- Seccion de usuario -->
                 <div class="row" th:if = "*{IdUsuario != 0}">
@@ -50,12 +50,13 @@
                         </div>
                     </div>
 
-
+                    
                     <!-- Seccion de datos personales -->
                     <div class="col-md-8">
                         <div class="card p-3 h-100">
                             <div class="mb-3">
                                 <label  class="form-label fw-bold error-msg">Nombre</label>
+                                
                                 <input  type="text" class="form-control" placeholder="Nombre"  th:field="*{Nombre}" <!-- onkeypress="SoloLetras(event, this) " --> >
 
                                         <span class="text-danger"
@@ -63,6 +64,7 @@
                                         onautocomplete=""th:errors="*{Nombre}">
                                     Message error
                                 </span>
+                                        
                             </div>
 
                             <div class="row">
@@ -139,11 +141,11 @@
                             <div class="row">
                                 <label for="RolUsuario" class="form-label fw-bold">Rol</label>
                                
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="0" th:each="rol : ${Roles}" th:text="${rol.Nombre}" th:value="${rol.idRol}">One</option>
-
+                                <select class="form-select" aria-label="Default select example"> 
+                                    <option th:value=0 selected> Selecciona un rol </option> 
+                                    <option th:each="rol : ${Roles}" th:text="${rol.Nombre}" th:value="${rol.idRol}">One</option>
                                 </select>
+
 
                             </div>
 

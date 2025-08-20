@@ -15,5 +15,5 @@ interface IUsuario {
             Result GetAll(); //Esto es un metodo abstracto, no lleva implementacion en una interfaz.
             Result GetDetail(int idAlumno);
             Result Add(Usuario usuario);
-            Result Update(Usuario usuario);
+            Result UpdateUser(Usuario usuario);
 }

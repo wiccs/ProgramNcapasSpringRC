@@ -60,6 +60,8 @@ public class Usuario {
     
 //     @Size(min = 18, max = 18, message = "entre 10 y 12 numeros")
     private String Curp;
+    
+    private String Fotito; ///FOTO de usuario
      
     public Rol Rol; //Propiedad Almacenada
 
@@ -192,6 +194,14 @@ public class Usuario {
 
     public String getCurp() {
         return Curp;
+    }
+    
+    public String getFotito(){
+        return Fotito;
+    }
+    
+    public void setFotito(String Fotito){
+        this.Fotito = Fotito;
     }
 
     public void setCurp(String Curp) {

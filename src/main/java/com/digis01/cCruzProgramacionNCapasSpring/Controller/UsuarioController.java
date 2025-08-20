@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Result;
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Usuario;
+import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -104,13 +106,16 @@ public class UsuarioController {
             @RequestParam(required = false) Integer idDireccion, 
             Model model){
         
+        Result resultrol = rolDAOImplementation.GetAll();
+        model.addAttribute("Roles",resultrol.objects);
+        
          if (idDireccion == null) { 
-         
-            Result resultrol = rolDAOImplementation.GetAll();
+                
+            
             Result result = usuarioDAOImplementation.GetDetail(idUsuario); //Este result contendra un idUsuario, y quiza un idDireccion
         
             int DireccionId = -1;
-            model.addAttribute("Roles",resultrol.object); //Los ids se mandan a la vista del formulario para cargarlos. 
+            
             model.addAttribute("Usuario",result.object); //Los ids se mandan a la vista del formulario para cargarlos. 
             model.addAttribute("idUsuario",DireccionId);
             
@@ -127,15 +132,31 @@ public class UsuarioController {
    
     @PostMapping("add") // localhost:8081/alumno/add
     public String Add(@Valid @ModelAttribute("Usuario") Usuario usuario,
-            BindingResult bindingResult, Model model){
+            BindingResult bindingResult, Model model,@RequestParam("imagenFile") MultipartFile imagen){
         
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("Usuario", usuario);
-            return "AlumnoForm";
-        } else {
-            Result result = usuarioDAOImplementation.Add(usuario);
-            return "redirect:/alumno";
-        }
+//        if (bindingResult.hasErrors()) {
+//            model.addAttribute("Usuario", usuario);
+//            return "AlumnoForm";//Si tiene errores de validacion recarga el formulario sin borrar los datos ingresados
+//        } else {
+             if (imagen != null) {
+                String nombre = imagen.getOriginalFilename();
+                //archivo.jpg
+                //[archivo,jpg]
+                String extension = nombre.split("\\.")[1];
+                if (extension.equals("jpg")) {
+                    try {
+                        byte[] bytes = imagen.getBytes();
+                        String base64Image = Base64.getEncoder().encodeToString(bytes);
+                        usuario.setFotito(base64Image);
+                    } catch (Exception ex) {
+                        System.out.println("Error");
+                    }
+
+                }
+            }
+            Result result = usuarioDAOImplementation.UpdateUser(usuario);
+            return "redirect:/usuario";
+        //}
 
     }
     
