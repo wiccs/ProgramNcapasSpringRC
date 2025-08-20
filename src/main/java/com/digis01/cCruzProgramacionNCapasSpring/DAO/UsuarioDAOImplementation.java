@@ -318,7 +318,7 @@ private JdbcTemplate jdbcTemplate;
         Result result = new Result();
         
         try {
-            result.correct   = jdbcTemplate.execute("{CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}", (CallableStatementCallback<Boolean>) callableStatement -> {
+            result.correct   = jdbcTemplate.execute("CALL UsuarioUpdateAjax(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (CallableStatementCallback<Boolean>) callableStatement -> {
                 callableStatement.setInt(1, usuario.getIdUsuario());
                 callableStatement.setString((2),usuario.getNombre());
                 callableStatement.setString((3),usuario.getApellidoPaterno());
@@ -339,7 +339,7 @@ private JdbcTemplate jdbcTemplate;
                
                 callableStatement.setInt((14),usuario.Rol.getIdRol());
                 
-                //callableStatement.setString(15, usuario.getFotito());
+                callableStatement.setString(15, usuario.getFotito());
 
                 int isCorrect = callableStatement.executeUpdate();
                 

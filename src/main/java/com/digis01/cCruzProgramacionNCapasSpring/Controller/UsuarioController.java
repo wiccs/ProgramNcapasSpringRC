@@ -143,8 +143,6 @@ public class UsuarioController {
 
              if (imagen != null && imagen.getOriginalFilename() != "") {
                 String nombre = imagen.getOriginalFilename();
-                //archivo.jpg
-                //[archivo,jpg]
                 String extension = nombre.split("\\.")[1];
                 if (extension.equals("jpg")) {
                     try {
