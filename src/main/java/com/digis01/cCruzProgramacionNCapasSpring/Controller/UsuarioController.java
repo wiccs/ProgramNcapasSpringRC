@@ -11,11 +11,18 @@ import com.digis01.cCruzProgramacionNCapasSpring.DAO.PaisDAOImplementation;
 import com.digis01.cCruzProgramacionNCapasSpring.DAO.RolDAOImplementation;
 import com.digis01.cCruzProgramacionNCapasSpring.DAO.UsuarioDAOImplementation;
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Direccion;
+import com.digis01.cCruzProgramacionNCapasSpring.ML.ErrorCM;
 import jakarta.validation.Valid;
 
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Result;
+import com.digis01.cCruzProgramacionNCapasSpring.ML.Rol;
 import com.digis01.cCruzProgramacionNCapasSpring.ML.Usuario;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -198,6 +205,99 @@ public class UsuarioController {
     
  //-----------------------------------------------------------------------------
     
-     
+//Carga Masiva:
     
+    @GetMapping("cargamasiva")
+    public String CargaMasiva() {
+
+        return "CargaMasiva";
+    }
+    
+    
+   
+     @PostMapping("cargamasiva")
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile file) {
+
+        if (file.getOriginalFilename().split("\\.")[1].equals("txt")) {
+
+            List<Usuario> usuarios = ProcesarTXT(file);
+            List<ErrorCM> errores = ValidarDatos(usuarios);
+
+            //modelatribute para mandas la lista de errores
+            //si lista errores diferente de vacio, intentar desplegar lista de errores en carga masiva
+        } else {
+
+            // excel
+        }
+
+        return "CargaMasiva";
+
+    }
+    
+    
+    private List<Usuario> ProcesarTXT(MultipartFile file){
+
+        try {
+
+            InputStream inputStream = file.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            
+            
+            String linea = ""; 
+            List<Usuario> usuarios = new ArrayList<>();
+            
+            while ((linea = bufferedReader.readLine()) != null) {                
+
+                String[] campos = linea.split("\\|");
+                Usuario usuario = new Usuario();
+                usuario.setNombre(campos[0]);
+                usuario.setApellidoPaterno(campos[1]);
+                usuario.setApellidoMaterno(campos[2]);
+                usuario.setUsername(campos[3]);
+                usuario.Rol = new Rol();
+                usuario.Rol.setIdRol(Integer.parseInt(campos[4]));
+                usuarios.add(usuario);
+            }
+            return usuarios;
+            
+        } catch (Exception ex){
+            System.out.println("error");
+            return null;
+        }
+    }
+    
+    private List<ErrorCM> ValidarDatos(List<Usuario> usuarios){
+        
+        List<ErrorCM> errores = new ArrayList<>();
+
+        int linea = 1; 
+
+        for (Usuario usuario : usuarios) {
+
+            if (usuario.getNombre() == null || usuario.getNombre() == ""){
+
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getNombre(), "Campo obligatorio");
+
+                errores.add(errorCM);
+
+            }
+
+            if(usuario.getApellidoPaterno() == null || usuario.getApellidoPaterno() == ""){
+                
+                ErrorCM errorCM  = new ErrorCM(linea,usuario.getApellidoPaterno(), "Campo Apellido es obligatorio");
+                
+                errores.add(errorCM);
+            }
+            
+           
+            
+            linea ++;
+        }
+
+        return errores;
+
+
+    }
+
+
 }
