@@ -20,9 +20,13 @@ import com.digis01.cCruzProgramacionNCapasSpring.ML.Usuario;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,11 +45,10 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author Alien 15
  */
-
 @Controller
 @RequestMapping("usuario")
 public class UsuarioController {
-    
+
     @Autowired //Inyeccion de repositorios y cositas :V
     private UsuarioDAOImplementation usuarioDAOImplementation;
     @Autowired
@@ -58,173 +61,160 @@ public class UsuarioController {
     private MunicipioDAOImplementation municipioDAOImplementation;
     @Autowired
     private ColoniaDAOImplementation coloniaDAOImplementation;
-    
-    
-    
+
     @GetMapping
-    public String Index(Model model){
+    public String Index(Model model) {
         Result result = usuarioDAOImplementation.GetAll();
-        
+
         if (result.correct) {
             model.addAttribute("usuarios", result.objects);
-      
-        } else  {
+
+        } else {
             model.addAttribute("usuarios", null);
         }
-        
+
         return "UsuarioIndex";
     }
-    
-     @GetMapping("usuarioDetail/{idUsuario}")
-    public String UsuarioDetail(@PathVariable int idUsuario, Model model)
-    
-    {
+
+    @GetMapping("usuarioDetail/{idUsuario}")
+    public String UsuarioDetail(@PathVariable int idUsuario, Model model) {
 
         Result result = usuarioDAOImplementation.GetDetail(idUsuario); //(●'◡'●)
-        
-       if(result.correct){
-           
-        model.addAttribute("datosUsuario", result);
-        
-       }else{
-      
-       }
+
+        if (result.correct) {
+
+            model.addAttribute("datosUsuario", result);
+
+        } else {
+
+        }
 
         return "UsuarioDetail";
     }
-    
-    
-        @GetMapping("add") 
-    public String add(Model model){
-        
-         Result result = rolDAOImplementation.GetAll();
-         Result result2 = paisDAOImplementation.GetAll();
-         
+
+    @GetMapping("add")
+    public String add(Model model) {
+
+        Result result = rolDAOImplementation.GetAll();
+        Result result2 = paisDAOImplementation.GetAll();
+
         model.addAttribute("Roles", result.objects);
-         model.addAttribute("Paises", result2.objects);
+        model.addAttribute("Paises", result2.objects);
         model.addAttribute("Usuario", new Usuario());
-        
+
         return "UsuarioForm";
     }
-    
-    
-     @GetMapping("getformEditable")
-    public String formEditable(@RequestParam int idUsuario,
-            @RequestParam(required = false) Integer idDireccion, 
-            Model model){
-        
-        Result resultrol = rolDAOImplementation.GetAll();
-        
-        model.addAttribute("Roles",resultrol.objects);
-        
-         if (idDireccion == null) { 
-                
-            
-            Result result = usuarioDAOImplementation.GetDetail(idUsuario); //Este result contendra un idUsuario, y quiza un idDireccion
-        
-            int DireccionId = -1;
-            
-            model.addAttribute("Usuario",result.object); //Los ids se mandan a la vista del formulario para cargarlos. 
-            model.addAttribute("idUsuario",DireccionId);
-            
-            
-       }
-        
-           return "UsuarioForm";
 
-        
+    @GetMapping("getformEditable")
+    public String formEditable(@RequestParam int idUsuario,
+            @RequestParam(required = false) Integer idDireccion,
+            Model model) {
+
+        Result resultrol = rolDAOImplementation.GetAll();
+
+        model.addAttribute("Roles", resultrol.objects);
+
+        if (idDireccion == null) {
+
+            Result result = usuarioDAOImplementation.GetDetail(idUsuario); //Este result contendra un idUsuario, y quiza un idDireccion
+
+            int DireccionId = -1;
+
+            model.addAttribute("Usuario", result.object); //Los ids se mandan a la vista del formulario para cargarlos. 
+            model.addAttribute("idUsuario", DireccionId);
+
+        }
+
+        return "UsuarioForm";
 
     }
-    
-    
-   
+
     @PostMapping("add") // localhost:8081/alumno/add
     public String Add(@Valid @ModelAttribute("Usuario") Usuario usuario,
-            BindingResult bindingResult, Model model, @RequestParam("imagenFile") MultipartFile imagen){
-        
+            BindingResult bindingResult, Model model, @RequestParam("imagenFile") MultipartFile imagen) {
+
 //        if (bindingResult.hasErrors()) {
 //            model.addAttribute("Usuario", usuario);
 //            return "AlumnoForm";//Si tiene errores de validacion recarga el formulario sin borrar los datos ingresados
 //        } else {
-
-
-             if (imagen != null && imagen.getOriginalFilename() != "") {
-                String nombre = imagen.getOriginalFilename();
-                String extension = nombre.split("\\.")[1];
-                if (extension.equals("jpg")) {
-                    try {
-                        byte[] bytes = imagen.getBytes();
-                        String base64Image = Base64.getEncoder().encodeToString(bytes);
-                        usuario.setFotito(base64Image);
-                    } catch (Exception ex) {
-                        System.out.println("Error");
-                    }
-
+        if (imagen != null && imagen.getOriginalFilename() != "") {
+            String nombre = imagen.getOriginalFilename();
+            String extension = nombre.split("\\.")[1];
+            if (extension.equals("jpg")) {
+                try {
+                    byte[] bytes = imagen.getBytes();
+                    String base64Image = Base64.getEncoder().encodeToString(bytes);
+                    usuario.setFotito(base64Image);
+                } catch (Exception ex) {
+                    System.out.println("Error");
                 }
-            }
 
-            Result result = usuarioDAOImplementation.UpdateUser(usuario);
-            
-            return "redirect:/usuario";
+            }
+        }
+
+        Result result = usuarioDAOImplementation.UpdateUser(usuario);
+
+        return "redirect:/usuario";
         //}
 
     }
-    
-    
-      //getMunicipioByEstado?IdEstado=7 -- requestParam
+
+    //getMunicipioByEstado?IdEstado=7 -- requestParam
     //getMunicipioByestado/7 -- pathVariable
     @GetMapping("getEstadoByPais/{IdPais}")
     @ResponseBody // retorne un dato estructurado - JSON
-    public Result EstadoByPais(@PathVariable("IdPais") int IdPais){
-      
+    public Result EstadoByPais(@PathVariable("IdPais") int IdPais) {
+
         Result result = estadoDAOImplementation.GetAll(IdPais);
-     
+
         return result;
     }
-    
-    
-    
+
     @GetMapping("getMunicipioByEstado/{IdEstado}")
     @ResponseBody // retorne un dato estructurado - JSON
-    public Result MunicipioByEstado(@PathVariable("IdEstado") int IdEstado){
-      
-        Result result =  municipioDAOImplementation.GetAll(IdEstado);
-   
+    public Result MunicipioByEstado(@PathVariable("IdEstado") int IdEstado) {
+
+        Result result = municipioDAOImplementation.GetAll(IdEstado);
+
         return result;
     }
-    
-    
+
     @GetMapping("getColoniaByMunicipio/{IdMunicipio}")
     @ResponseBody // retorne un dato estructurado - JSON
-    public Result ColoniaByMunicipio(@PathVariable("IdMunicipio") int IdEstado){
-      
-        Result result =  coloniaDAOImplementation.GetAll(IdEstado);
-   
+    public Result ColoniaByMunicipio(@PathVariable("IdMunicipio") int IdEstado) {
+
+        Result result = coloniaDAOImplementation.GetAll(IdEstado);
+
         return result;
     }
-    
- //-----------------------------------------------------------------------------
-    
+
+    //-----------------------------------------------------------------------------
 //Carga Masiva:
-    
     @GetMapping("cargamasiva")
     public String CargaMasiva() {
 
         return "CargaMasiva";
     }
-    
-    
-   
-     @PostMapping("cargamasiva")
-    public String CargaMasiva(@RequestParam("archivo") MultipartFile file) {
+
+    @PostMapping("cargamasiva")
+    public String CargaMasiva(@RequestParam("archivo") MultipartFile file, Model model) {
 
         if (file.getOriginalFilename().split("\\.")[1].equals("txt")) {
 
             List<Usuario> usuarios = ProcesarTXT(file);
             List<ErrorCM> errores = ValidarDatos(usuarios);
 
-            //modelatribute para mandas la lista de errores
-            //si lista errores diferente de vacio, intentar desplegar lista de errores en carga masiva
+            if (errores.isEmpty()) {
+
+                model.addAttribute("listaErrores", errores);
+                model.addAttribute("archivoCorrecto", true);
+
+            } else {
+
+                model.addAttribute("listaErrores", errores);
+                model.addAttribute("archivoCorrecto", false);
+            }
+
         } else {
 
             // excel
@@ -233,71 +223,121 @@ public class UsuarioController {
         return "CargaMasiva";
 
     }
-    
-    
-    private List<Usuario> ProcesarTXT(MultipartFile file){
+
+    private List<Usuario> ProcesarTXT(MultipartFile file) {
 
         try {
 
             InputStream inputStream = file.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            
-            
-            String linea = ""; 
+
+            String linea = "";
             List<Usuario> usuarios = new ArrayList<>();
-            
-            while ((linea = bufferedReader.readLine()) != null) {                
+
+            while ((linea = bufferedReader.readLine()) != null) {
 
                 String[] campos = linea.split("\\|");
                 Usuario usuario = new Usuario();
                 usuario.setNombre(campos[0]);
+
                 usuario.setApellidoPaterno(campos[1]);
                 usuario.setApellidoMaterno(campos[2]);
-                usuario.setUsername(campos[3]);
-                usuario.Rol = new Rol();
-                usuario.Rol.setIdRol(Integer.parseInt(campos[4]));
+                usuario.setEdad(Integer.parseInt(campos[3]));
+//                usuario.setSexo(campos[4]);
+//                
+//               SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+//               Date fecha = formato.parse(campos[5]);
+//               
+//                usuario.setFechaNacimiento(fecha);
+//                
+//                usuario.setUsername(campos[6]);
+//                usuario.setEmail(campos[7]);
+//                usuario.setPassword(campos[8]);
+//                usuario.setTelefono(campos[9]);
+//                usuario.setCelular(campos[10]);
+//                usuario.setCurp(campos[11]);
+//                usuario.setFotito(campos[12]);
+//      
+//                usuario.Rol = new Rol();
+//                usuario.Rol.setIdRol(Integer.parseInt(campos[13]));
                 usuarios.add(usuario);
             }
             return usuarios;
-            
-        } catch (Exception ex){
+
+        } catch (Exception ex) {
             System.out.println("error");
             return null;
         }
     }
-    
-    private List<ErrorCM> ValidarDatos(List<Usuario> usuarios){
-        
+
+    private List<ErrorCM> ValidarDatos(List<Usuario> usuarios) {
+
         List<ErrorCM> errores = new ArrayList<>();
 
-        int linea = 1; 
+        int linea = 1;
 
         for (Usuario usuario : usuarios) {
 
-            if (usuario.getNombre() == null || usuario.getNombre() == ""){
+            if (usuario.getNombre() == null || usuario.getNombre() == "") {
 
-                ErrorCM errorCM = new ErrorCM(linea, usuario.getNombre(), "Campo obligatorio");
-
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getNombre(), "Campo Nombre es obligatorio");
                 errores.add(errorCM);
+            } else {
 
+                String regex = "[A-Za-z]+\\s[A-Za-z]+$";
+                Boolean esValido = Pattern.matches(regex, usuario.getNombre());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getNombre(), "El nombre no es valido");
+                    errores.add(errorCM);
+                }
             }
 
-            if(usuario.getApellidoPaterno() == null || usuario.getApellidoPaterno() == ""){
-                
-                ErrorCM errorCM  = new ErrorCM(linea,usuario.getApellidoPaterno(), "Campo Apellido es obligatorio");
-                
+            if (usuario.getApellidoPaterno() == null || usuario.getApellidoPaterno() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoPaterno(), "Apellido Paterno es obligatorio");
                 errores.add(errorCM);
+            } else {
+                String regex = "[A-Za-z/ñ]+$";
+                Boolean esValido = Pattern.matches(regex, usuario.getApellidoPaterno());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoPaterno(), "El Apellido  no es valido");
+                    errores.add(errorCM);
+                }
             }
             
-           
+             if (usuario.getApellidoMaterno() == null || usuario.getApellidoMaterno() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoMaterno(), "Apellido Materno es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "[A-Za-z/ñ]+$";
+                Boolean esValido = Pattern.matches(regex, usuario.getApellidoMaterno());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoMaterno(), "El Apellido  no es valido");
+                    errores.add(errorCM);
+                }
+            }
+             
+             
+             Integer edad = (Integer) usuario.getEdad();
+             
+               if (edad == null || edad == 0) {
+                ErrorCM errorCM = new ErrorCM(linea, String.valueOf(edad), "Edad es obligatoria");
+                errores.add(errorCM);
+            } else {
+                String regex = "[1]?[0-9][0-9]$";
+                Boolean esValido = Pattern.matches(regex, edad.toString());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoMaterno(), "El Apellido  no es valido");
+                    errores.add(errorCM);
+                }
+            }
             
-            linea ++;
+            
+            linea++;
         }
 
         return errores;
 
-
     }
 
-
 }
+//

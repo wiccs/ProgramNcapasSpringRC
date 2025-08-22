@@ -8,7 +8,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     </head>
+    
+     <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-4 ">
+                <a class="navbar-brand text-white" th:href="@{/usuario}">INDEX</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a th:href="@{/usuario/add}" class="nav-item nav-link active text-white" href="#">Registro</a>
+                    </div>
+                </div>
+            </nav>
 
     <body>
 
@@ -34,6 +47,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
             </div>
+            
+
 
 
             <div id="formularioArchivo" style="display: none">
@@ -42,7 +57,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <br>
 
 
-                <form action="/alumno/cargamasiva" method="post" enctype="multipart/form-data">
+                <form action="/usuario/cargamasiva" method="post" enctype="multipart/form-data">
 
 
                     <input type="file" id="archivo" name="archivo" accept=".xlsx,.txt">
@@ -52,8 +67,37 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
                 </form>
+                
+            </div>
+            
+            
+            <div th:if="${archivoCorrecto!= null}">
+                
+                <div th:if="${listaErrores.isEmpty()}"> 
+                    <h4>Archivo correcto: </h4>
+                    <a th:href="@{/usuario/cargamasiva/procesar}" class="btn btn-success">Proesar archivo</a>
+                </div>
+                
+                <div th:unless="${listaErrores.isEmpty()}">
+                    <h4>Archivo incorrecto: </h4>
+                    <table class="table table-responsive table-bordered">
+                        <thead class="table-dark">
+                        <th class="col-2">Linea</th>
+                        <th>Texto</th>
+                        <th>Error</th>
+                        </thead>
+                        <tbody>
+                            
+                            <tr th:each="error :${listaErrores}">
+                                <td th:text="${error.linea}"></td> 
+                                <td th:text="${error.dato}"></td> 
+                                <td th:text="${error.mensaje}"></td> 
+                            </tr>
+                            
+                        </tbody>
+                    </table>
 
-
+                </div>
             </div>
 
         </div>
