@@ -27,6 +27,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -224,7 +226,7 @@ public class UsuarioController {
         } else {
 
             List<Usuario> usuarios = ProcesarExcel(file);
-
+ 
             List<ErrorCM> errores = ValidarDatos(usuarios);
 
             if (errores.isEmpty()) {
@@ -462,8 +464,15 @@ public class UsuarioController {
                 Usuario usuario = new Usuario();
 
                 usuario.setNombre(row.getCell(0) != null ? row.getCell(0).toString() : "");
-                usuario.setApellidoPaterno(row.getCell(0) != null ? row.getCell(1).toString());
-
+                usuario.setApellidoPaterno(row.getCell(1) != null ? row.getCell(1).toString():"");
+                usuario.setApellidoMaterno(row.getCell(2) != null ? row.getCell(2).toString():"");
+                
+//                DataFormatter formatter = new DataFormatter();
+//                String celdaEdad = formatter.formatCellValue(row.getCell(3));
+                
+                Cell cellEdad = row.getCell(3);
+                usuario.setEdad((int)cellEdad.getNumericCellValue());
+                
                 
 //
 //                usuario.Rol = new Rol();
