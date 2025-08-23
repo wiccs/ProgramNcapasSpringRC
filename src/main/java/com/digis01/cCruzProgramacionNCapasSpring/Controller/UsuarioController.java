@@ -41,6 +41,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 /**
  *
  * @author Alien 15
@@ -48,6 +52,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("usuario")
 public class UsuarioController {
+
+    Result result = new Result();
 
     @Autowired //Inyeccion de repositorios y cositas :V
     private UsuarioDAOImplementation usuarioDAOImplementation;
@@ -217,7 +223,24 @@ public class UsuarioController {
 
         } else {
 
-            // excel
+            List<Usuario> usuarios = ProcesarExcel(file);
+
+            List<ErrorCM> errores = ValidarDatos(usuarios);
+
+            if (errores.isEmpty()) {
+
+                model.addAttribute("listaErrores", errores);
+
+                model.addAttribute("archivoCorrecto", true);
+
+            } else {
+
+                model.addAttribute("listaErrores", errores);
+
+                model.addAttribute("archivoCorrecto", false);
+
+            }
+
         }
 
         return "CargaMasiva";
@@ -243,18 +266,23 @@ public class UsuarioController {
                 usuario.setApellidoPaterno(campos[1]);
                 usuario.setApellidoMaterno(campos[2]);
                 usuario.setEdad(Integer.parseInt(campos[3]));
-//                usuario.setSexo(campos[4]);
+                usuario.setSexo(campos[4]);
 //                
-//               SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-//               Date fecha = formato.parse(campos[5]);
-//               
-//                usuario.setFechaNacimiento(fecha);
-//                
-//                usuario.setUsername(campos[6]);
-//                usuario.setEmail(campos[7]);
-//                usuario.setPassword(campos[8]);
-//                usuario.setTelefono(campos[9]);
-//                usuario.setCelular(campos[10]);
+                try {
+                    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                    Date fecha = formato.parse(campos[5]);
+                    usuario.setFechaNacimiento(fecha);
+
+                } catch (Exception e) {
+
+                    result.correct = false;
+
+                }
+                usuario.setUsername(campos[6]);
+                usuario.setEmail(campos[7]);
+                usuario.setPassword(campos[8]);
+                usuario.setTelefono(campos[9]);
+                usuario.setCelular(campos[10]);
 //                usuario.setCurp(campos[11]);
 //                usuario.setFotito(campos[12]);
 //      
@@ -303,8 +331,8 @@ public class UsuarioController {
                     errores.add(errorCM);
                 }
             }
-            
-             if (usuario.getApellidoMaterno() == null || usuario.getApellidoMaterno() == "") {
+
+            if (usuario.getApellidoMaterno() == null || usuario.getApellidoMaterno() == "") {
                 ErrorCM errorCM = new ErrorCM(linea, usuario.getApellidoMaterno(), "Apellido Materno es obligatorio");
                 errores.add(errorCM);
             } else {
@@ -315,11 +343,10 @@ public class UsuarioController {
                     errores.add(errorCM);
                 }
             }
-             
-             
-             Integer edad = (Integer) usuario.getEdad();
-             
-               if (edad == null || edad == 0) {
+
+            Integer edad = (Integer) usuario.getEdad();
+
+            if (edad == null || edad == 0) {
                 ErrorCM errorCM = new ErrorCM(linea, String.valueOf(edad), "Edad es obligatoria");
                 errores.add(errorCM);
             } else {
@@ -330,12 +357,129 @@ public class UsuarioController {
                     errores.add(errorCM);
                 }
             }
-            
-            
-            linea++;
+
+            if (usuario.getSexo() == null || usuario.getSexo() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getSexo(), "Sexo es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "^[M|N]";
+                Boolean esValido = Pattern.matches(regex, usuario.getSexo());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getSexo(), "El Sexo no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getFechaNacimiento() == null) {
+                ErrorCM errorCM = new ErrorCM(linea, null, "La fecha es obligatoria");
+                errores.add(errorCM);
+            } else {
+
+                if (result.correct = false) {
+                    ErrorCM errorCM = new ErrorCM(linea, null, "La fecha no es valida");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getUsername() == null || usuario.getUsername() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getSexo(), "usuario es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "[A-Za-z0-9_]+$";
+                Boolean esValido = Pattern.matches(regex, usuario.getUsername());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getUsername(), "El Usuario no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getEmail() == null || usuario.getEmail() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getEmail(), "Email es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}";
+                Boolean esValido = Pattern.matches(regex, usuario.getEmail());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getEmail(), "El email no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getPassword() == null || usuario.getPassword() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getPassword(), "Password es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "[A-Za-z0-9./]+";
+                Boolean esValido = Pattern.matches(regex, usuario.getPassword());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getPassword(), "El password no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getTelefono() == null || usuario.getTelefono() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getPassword(), "Telefono es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "(\\+52)?\\d{10}";
+                Boolean esValido = Pattern.matches(regex, usuario.getTelefono());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getTelefono(), "El Telefono no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
+            if (usuario.getCelular() == null || usuario.getCelular() == "") {
+                ErrorCM errorCM = new ErrorCM(linea, usuario.getPassword(), "Telefono es obligatorio");
+                errores.add(errorCM);
+            } else {
+                String regex = "(\\+52)?\\d{10}";
+                Boolean esValido = Pattern.matches(regex, usuario.getCelular());
+                if (!esValido) {
+                    ErrorCM errorCM = new ErrorCM(linea, usuario.getCelular(), "El Telefono no es valido");
+                    errores.add(errorCM);
+                }
+            }
+
         }
 
+        linea++;
+
         return errores;
+
+    }
+
+    private List<Usuario> ProcesarExcel(MultipartFile file) {
+
+        List<Usuario> usuarios = new ArrayList<>();
+
+        try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
+
+            Sheet sheet = workbook.getSheetAt(0); //Trabaja en la primer hoja de excel
+
+            for (Row row : sheet) { //Cada fila de la hoja se mapea como una entidad Usuario
+
+                Usuario usuario = new Usuario();
+
+                usuario.setNombre(row.getCell(0) != null ? row.getCell(0).toString() : "");
+                usuario.setApellidoPaterno(row.getCell(0) != null ? row.getCell(1).toString());
+
+                
+//
+//                usuario.Rol = new Rol();
+//                usuario.Rol.setIdRol(row.getCell(4) != null ? (int) row.getCell(4).getNumericCellValue() : 0);
+
+                usuarios.add(usuario);
+
+            }
+
+            return usuarios;
+
+        } catch (Exception ex) {
+
+            return null;
+
+        }
 
     }
 

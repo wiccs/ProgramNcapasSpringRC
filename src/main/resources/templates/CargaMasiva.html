@@ -11,7 +11,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     </head>
     
-     <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-4 ">
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark mb-4 ">
                 <a class="navbar-brand text-white" th:href="@{/usuario}">INDEX</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,6 +19,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a th:href="@{/usuario/add}" class="nav-item nav-link active text-white" href="#">Registro</a>
+                    </div>
+                    <div class="navbar-nav">
+                        <a th:href="@{/usuario/cargamasiva}" class="nav-item nav-link active text-white" href="#">CargaMasiva</a>
                     </div>
                 </div>
             </nav>
@@ -75,7 +78,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 
                 <div th:if="${listaErrores.isEmpty()}"> 
                     <h4>Archivo correcto: </h4>
-                    <a th:href="@{/usuario/cargamasiva/procesar}" class="btn btn-success">Proesar archivo</a>
+                    <a th:href="@{/usuario/cargamasiva/procesar}" class="btn btn-success">Procesar archivo</a>
                 </div>
                 
                 <div th:unless="${listaErrores.isEmpty()}">
@@ -90,7 +93,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             
                             <tr th:each="error :${listaErrores}">
                                 <td th:text="${error.linea}"></td> 
-                                <td th:text="${error.dato}"></td> 
+                                <td class="text-warning" th:text="${error.dato}"></td> 
                                 <td th:text="${error.mensaje}"></td> 
                             </tr>
                             
