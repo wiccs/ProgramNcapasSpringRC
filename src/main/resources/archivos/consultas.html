@@ -1,0 +1,34 @@
+CREATE OR REPLACE NONEDITIONABLE PROCEDURE UsuarioDireccionGetAllBusqueda(
+
+pNombre IN VARCHAR,
+pApellidoPaterno IN VARCHAR,
+pApellidoMaterno IN VARCHAR,
+pCursor OUT SYS_REFCURSOR
+)AS
+SqlQuery VARCHAR(4000);
+BEGIN
+SqlQuery := 'SELECT Usuario.IdUsuario, Usuario.Nombre AS Nombre, Usuario.ApellidoPaterno, Usuario.ApellidoMaterno,
+Usuario.Edad,Usuario.Sexo, Usuario.FechaNacimiento,Usuario.Username,Usuario.Email,
+Usuario.Password,Usuario.Telefono,Usuario.celular,Usuario.Curp,Rol.idRol, Rol.Nombre AS Rol, Direccion.idDireccion,Direccion.Calle, Direccion.NumeroInterior,Direccion.NumeroExterior, Colonia.idColonia, Colonia.Nombre AS Colonia,
+Colonia.CodigoPostal,Municipio.idMunicipio, Municipio.Nombre AS Municipio,Estado.idEstado, Estado.Nombre AS Estado, Pais.Nombre AS Pais
+FROM Direccion
+
+INNER JOIN Usuario
+ON Direccion.IdUsuario = Usuario.IdUsuario
+INNER JOIN Colonia
+ON Direccion.IdColonia =  Colonia.IdColonia
+INNER JOIN Rol
+ON Usuario.IdRol = Rol.IdRol
+INNER JOIN Municipio
+ON Colonia.IdMunicipio = Municipio.IdMunicipio
+INNER JOIN Estado
+ON Municipio.IdEstado = Estado.IdEstado
+INNER JOIN Pais
+ON Estado.IdPais = Pais.IdPais
+WHERE UPPER(Usuario.Nombre) LIKE UPPER(''%' || :pNombre || '%'')
+AND LOWER(Usuario.ApellidoPaterno) LIKE LOWER(''%' || :pApellidoPaterno || '%'')
+AND UPPER(Usuario.ApellidoMaterno) LIKE UPPER(''%' || :pApellidoMaterno || '%'') ORDER BY Usuario.IdUsuario';
+
+OPEN pCursor FOR SqlQuery USING pNombre, pApellidoPaterno, pApellidoMaterno;
+
+END UsuarioDireccionGetAll;

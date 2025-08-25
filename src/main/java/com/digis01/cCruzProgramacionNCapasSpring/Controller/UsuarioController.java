@@ -276,6 +276,32 @@ public class UsuarioController {
 
     }
 
+      @GetMapping("cargamasiva/procesar")
+    public String CargaMasiva(HttpSession session) {
+        try {
+
+            String ruta = session.getAttribute("path").toString();
+
+            List<Usuario> usuarios;
+
+            if (ruta.split("\\.")[1].equals("txt")) {
+                usuarios = ProcesarTXT(new File(ruta));
+            } else {
+                usuarios = ProcesarExcel(new File(ruta));
+            }
+
+            for (Usuario usuario : usuarios) {
+                usuarioDAOImplementation.Add(usuario);
+            }
+
+            session.removeAttribute("path");
+
+        } catch (Exception ex) {
+            System.out.println(ex.getLocalizedMessage());
+        }
+
+        return "redirect:/usuario";
+    }
    
    
     
